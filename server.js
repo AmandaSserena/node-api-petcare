@@ -7,20 +7,19 @@ app.use(cors());
 app.use(express.json());
 
 const uri = 'mongodb://localhost:27017';
-; // Atualize se usar MongoDB Atlas
+; 
 const client = new MongoClient(uri);
 
 let db;
 
 async function connectDB() {
   await client.connect();
-  db = client.db('petcare');  // Nome do seu banco de dados
+  db = client.db('petcare');  
   console.log('Conectado ao MongoDB');
 }
 
 connectDB().catch(console.error);
 
-// --- Relatórios ---
 
 // 1. Pets por espécie
 app.get('/relatorio/pets-por-especie', async (req, res) => {
@@ -72,7 +71,7 @@ app.get('/relatorio/veterinario-mais-atendimentos', async (req, res) => {
   }
 });
 
-// --- Iniciar servidor ---
+
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
