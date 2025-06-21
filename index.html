@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Relatórios PetCare+</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f7f7f7; }
+    h2 { color: #761862; }
+    table { border-collapse: collapse; width: 100%; margin-bottom: 40px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #761862; color: white; }
+  </style>
+</head>
+<body>
+  <h1>Relatórios PetCare+</h1>
+
+  <section id="pets-especie">
+    <h2>1. Quantidade de pets por espécie</h2>
+    <table>
+      <thead><tr><th>Espécie</th><th>Total</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section id="agendamentos-vet">
+    <h2>2. Agendamentos por veterinário</h2>
+    <table>
+      <thead><tr><th>ID Veterinário</th><th>Total Agendamentos</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section id="atendimentos-dia">
+    <h2>3. Atendimentos por dia</h2>
+    <table>
+      <thead><tr><th>Data</th><th>Total Atendimentos</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section id="vet-mais-atendimentos">
+    <h2>4. Veterinário com maior número de atendimentos</h2>
+    <table>
+      <thead><tr><th>ID Veterinário</th><th>Total Atendimentos</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <script>
+    const baseURL = 'http://localhost:3000/relatorio';
+
+    async function fetchAndFill(sectionId, endpoint, mapRow) {
+      const res = await fetch(`${baseURL}/${endpoint}`);
+      const data = await res.json();
+      const tbody = document.querySelector(`#${sectionId} tbody`);
+      tbody.innerHTML = '';
+      data.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = mapRow(item);
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Preencher tabelas
+    fetchAndFill('pets-especie', 'pets-por-especie', item => `
+      <td>${item._id || 'Desconhecido'}</td>
+      <td>${item.total}</td>
+    `);
+
+    fetchAndFill('agendamentos-vet', 'agendamentos-por-veterinario', item => `
+      <td>${item._id}</td>
+      <td>${item.total}</td>
+    `);
+
+    fetchAndFill('atendimentos-dia', 'atendimentos-por-dia', item => `
+      <td>${item._id}</td>
+      <td>${item.total}</td>
+    `);
+
+    fetchAndFill('vet-mais-atendimentos', 'veterinario-mais-atendimentos', item => `
+      <td>${item._id}</td>
+      <td>${item.total}</td>
+    `);
+  </script>
+</body>
+</html>
