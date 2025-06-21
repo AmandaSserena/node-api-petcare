@@ -1,7 +1,7 @@
 # 🐾 PetCare API
 
 API desenvolvida em **Node.js** com **MongoDB** para gerenciar informações de pets, donos e atendimentos veterinários. Este projeto foi realizado como atividade avaliativa da faculdade, aplicando os conceitos de modelagem **NoSQL**.
-**Link do trabalho:**https://docs.google.com/document/d/1e7Ay4vngwEgfztN3AgGlgLXBUly4bo2mYmNqEPeuSf0/edit?tab=t.0
+**Link do trabalho:** https://docs.google.com/document/d/1e7Ay4vngwEgfztN3AgGlgLXBUly4bo2mYmNqEPeuSf0/edit?tab=t.0
 ---
 
 ## 📚 Tecnologias Utilizadas
