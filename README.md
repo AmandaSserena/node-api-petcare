@@ -126,7 +126,3 @@ Uso livre para fins educacionais e aprendizado.
 
 ---
 
-Se quiser me marcar no LinkedIn, será um prazer ver seu sucesso! 🚀
-\#NodeJS #MongoDB #API #BancoDeDados #ADS #ProjetosAcadêmicos
-
-```
