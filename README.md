@@ -1,51 +1,46 @@
-# 🐾 PetCare API
+# 🐾 PetCare+ API
 
-API desenvolvida em **Node.js** com **MongoDB** para gerenciar informações de pets, donos e atendimentos veterinários. Este projeto foi realizado como atividade avaliativa da faculdade, aplicando os conceitos de modelagem **NoSQL**.
+API desenvolvida em **Node.js** com **MongoDB** para gerenciar e analisar dados de pets, tutores, atendimentos e agendamentos de uma clínica veterinária.
+
+Este projeto foi desenvolvido como **atividade avaliativa final** da disciplina de **Banco de Dados**, com foco em modelagem **NoSQL**, uso de **MongoDB Aggregation** e construção de **relatórios via API REST**.
 
 ---
 
-## 📚 Tecnologias Utilizadas
+## 🚀 Tecnologias Utilizadas
 
-* Node.js
-* Express.js
-* MongoDB (NoSQL)
+- Node.js  
+- Express.js  
+- MongoDB  
+- MongoDB Atlas (opcional)  
+- VS Code
 
 ---
 
 ## 📁 Estrutura do Projeto
 
 ```
-PetCare/
-├── models/
-│   ├── Pet.js
-│   ├── Dono.js
-│   └── Atendimento.js
-├── routes/
-│   ├── petRoutes.js
-│   ├── donoRoutes.js
-│   └── atendimentoRoutes.js
-├── controllers/
-│   ├── petController.js
-│   ├── donoController.js
-│   └── atendimentoController.js
-├── config/
-│   └── db.js
-├── .env
+
+PetCare-API/
+├── node\_modules/
+├── index.html
+├── massadados.json
 ├── package.json
-├── app.js
-└── README.md
-```
+├── package-lock.json
+├── README.md
+└── server.js
+
+````
 
 ---
 
-## ⚙️ Como rodar o projeto
+## ⚙️ Como Rodar o Projeto
 
 ### 1. Clone o repositório
 
 ```bash
 git clone https://github.com/AmandaSserena/PetCare.git
 cd PetCare
-```
+````
 
 ### 2. Instale as dependências
 
@@ -53,71 +48,85 @@ cd PetCare
 npm install
 ```
 
-### 3. Configure o arquivo `.env`
+### 3. Configure o MongoDB
 
-Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo:
+Certifique-se de que o MongoDB está rodando localmente na porta 27017 ou altere a URI no `server.js`:
 
-```env
-PORT=3000
-MONGO_URI=mongodb://localhost:27017/petcare
+```js
+const uri = 'mongodb://localhost:27017';
 ```
 
-> 💡 Você pode usar o MongoDB Atlas se quiser uma conexão na nuvem.
+O banco de dados utilizado se chama **petcare**.
 
 ### 4. Inicie o servidor
 
 ```bash
-npm run dev
+node server.js
 ```
 
-A API estará disponível em: `http://localhost:3000`
+A API estará disponível em:
+👉 `http://localhost:3000`
 
 ---
 
-## 📌 Rotas da API
+## 📊 Relatórios Implementados (10)
 
-### 🐶 Pets
+Abaixo estão as **rotas REST** que retornam dados analíticos usando **MongoDB Aggregation Pipeline**.
 
-| Método | Rota        | Descrição                 |
-| ------ | ----------- | ------------------------- |
-| GET    | `/pets`     | Lista todos os pets       |
-| GET    | `/pets/:id` | Retorna um pet específico |
-| POST   | `/pets`     | Cadastra um novo pet      |
-| PUT    | `/pets/:id` | Atualiza um pet           |
-| DELETE | `/pets/:id` | Remove um pet             |
-
-### 👤 Donos
-
-| Método | Rota     | Descrição             |
-| ------ | -------- | --------------------- |
-| GET    | `/donos` | Lista todos os donos  |
-| POST   | `/donos` | Cadastra um novo dono |
-
-### 🩺 Atendimentos
-
-| Método | Rota            | Descrição                    |
-| ------ | --------------- | ---------------------------- |
-| GET    | `/atendimentos` | Lista todos os atendimentos  |
-| POST   | `/atendimentos` | Registra um novo atendimento |
+| Nº | Rota                                       | Relatório                         | Descrição                                            |
+| -- | ------------------------------------------ | --------------------------------- | ---------------------------------------------------- |
+| 1  | `/relatorio/pets-por-especie`              | Pets por espécie                  | Conta o total de pets agrupado por espécie           |
+| 2  | `/relatorio/agendamentos-por-veterinario`  | Agendamentos por veterinário      | Total de agendamentos feitos por cada veterinário    |
+| 3  | `/relatorio/atendimentos-por-dia`          | Atendimentos por dia              | Total de atendimentos por data                       |
+| 4  | `/relatorio/veterinario-mais-atendimentos` | Veterinário com mais atendimentos | Ranking com o profissional mais ativo                |
+| 5  | `/relatorio/clientes-mais-pets`            | Clientes com mais pets            | Identifica os tutores com mais animais               |
+| 6  | `/relatorio/atendimentos-por-mes`          | Atendimentos por mês              | Total de atendimentos realizados mensalmente         |
+| 7  | `/relatorio/agendamentos-por-dia`          | Agendamentos por dia              | Planejamento diário da clínica                       |
+| 8  | `/relatorio/faturamento-por-veterinario`   | Faturamento por veterinário       | Soma do faturamento por vet (R\$100 por atendimento) |
+| 9  | `/relatorio/pets-mais-atendimentos`        | Pets mais atendidos               | Animais com mais passagens pela clínica              |
+| 10 | `/relatorio/media-idade-por-especie`       | Média de idade por espécie        | Perfil demográfico dos animais atendidos             |
 
 ---
 
-## 🧪 Exemplo de Requisição JSON
+## 🧾 Exemplo de Retorno JSON
 
-### POST `/pets`
+### `GET /relatorio/pets-por-especie`
 
 ```json
-{
-  "nome": "Rex",
-  "especie": "Cachorro",
-  "idade": 5,
-  "donoId": "665cefc3bf82a2c5e23f19ab"
-}
+[
+  { "_id": "Cachorro", "total": 5 },
+  { "_id": "Gato", "total": 3 }
+]
 ```
+
+### `GET /relatorio/media-idade-por-especie`
+
+```json
+[
+  { "_id": "Gato", "mediaIdade": 6.3 },
+  { "_id": "Cachorro", "mediaIdade": 4.5 }
+]
+```
+
+---
+
+## 💡 Aprendizados aplicados
+
+* Operadores MongoDB: `$group`, `$sum`, `$avg`, `$sort`, `$limit`, `$substr`
+* Criação de rotas REST com Express
+* Integração entre back-end e banco NoSQL
+* Organização de projeto real com relatórios automatizados
 
 ---
 
 ## 📄 Licença
 
-Projeto desenvolvido por [Amanda Serena](https://github.com/AmandaSserena) como atividade acadêmica. Livre para fins educacionais. 💜
+Projeto acadêmico desenvolvido por [Amanda Serena](https://github.com/AmandaSserena) 💜
+Uso livre para fins educacionais e aprendizado.
 
+---
+
+Se quiser me marcar no LinkedIn, será um prazer ver seu sucesso! 🚀
+\#NodeJS #MongoDB #API #BancoDeDados #ADS #ProjetosAcadêmicos
+
+```
