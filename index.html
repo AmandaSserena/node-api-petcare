@@ -4,11 +4,35 @@
   <meta charset="UTF-8" />
   <title>Relatórios PetCare+</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f7f7f7; }
-    h2 { color: #761862; }
-    table { border-collapse: collapse; width: 100%; margin-bottom: 40px; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background-color: #761862; color: white; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f7f7f7;
+    }
+    h1 {
+      color: #761862;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    h2 {
+      color: #761862;
+      margin-top: 50px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 10px;
+      margin-bottom: 40px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #761862;
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -46,40 +70,112 @@
     </table>
   </section>
 
+  <section id="clientes-mais-pets">
+    <h2>5. Clientes com mais pets</h2>
+    <table>
+      <thead><tr><th>ID Cliente</th><th>Total Pets</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section id="atendimentos-mes">
+    <h2>6. Atendimentos por mês</h2>
+    <table>
+      <thead><tr><th>Mês</th><th>Total</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section id="agendamentos-dia-2">
+    <h2>7. Agendamentos por dia</h2>
+    <table>
+      <thead><tr><th>Data</th><th>Total Agendamentos</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section id="faturamento-vet">
+    <h2>8. Faturamento por veterinário</h2>
+    <table>
+      <thead><tr><th>ID Veterinário</th><th>Total (R$)</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section id="pets-mais-atendimentos">
+    <h2>9. Pets com mais atendimentos</h2>
+    <table>
+      <thead><tr><th>ID Pet</th><th>Total Atendimentos</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section id="media-idade-especie">
+    <h2>10. Média de idade dos pets por espécie</h2>
+    <table>
+      <thead><tr><th>Espécie</th><th>Média de Idade</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
   <script>
     const baseURL = 'http://localhost:3000/relatorio';
 
     async function fetchAndFill(sectionId, endpoint, mapRow) {
-      const res = await fetch(`${baseURL}/${endpoint}`);
-      const data = await res.json();
-      const tbody = document.querySelector(`#${sectionId} tbody`);
-      tbody.innerHTML = '';
-      data.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = mapRow(item);
-        tbody.appendChild(tr);
-      });
+      try {
+        const res = await fetch(`${baseURL}/${endpoint}`);
+        const data = await res.json();
+        const tbody = document.querySelector(`#${sectionId} tbody`);
+        tbody.innerHTML = '';
+        data.forEach(item => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = mapRow(item);
+          tbody.appendChild(tr);
+        });
+      } catch (error) {
+        console.error(`Erro ao buscar ${endpoint}:`, error);
+      }
     }
 
-    // Preencher tabelas
+    // Chamadas de preenchimento das 10 tabelas
     fetchAndFill('pets-especie', 'pets-por-especie', item => `
-      <td>${item._id || 'Desconhecido'}</td>
-      <td>${item.total}</td>
+      <td>${item._id}</td><td>${item.total}</td>
     `);
 
     fetchAndFill('agendamentos-vet', 'agendamentos-por-veterinario', item => `
-      <td>${item._id}</td>
-      <td>${item.total}</td>
+      <td>${item._id}</td><td>${item.total}</td>
     `);
 
     fetchAndFill('atendimentos-dia', 'atendimentos-por-dia', item => `
-      <td>${item._id}</td>
-      <td>${item.total}</td>
+      <td>${item._id}</td><td>${item.total}</td>
     `);
 
     fetchAndFill('vet-mais-atendimentos', 'veterinario-mais-atendimentos', item => `
-      <td>${item._id}</td>
-      <td>${item.total}</td>
+      <td>${item._id}</td><td>${item.total}</td>
+    `);
+
+    fetchAndFill('clientes-mais-pets', 'clientes-mais-pets', item => `
+      <td>${item._id}</td><td>${item.totalPets}</td>
+    `);
+
+    fetchAndFill('atendimentos-mes', 'atendimentos-por-mes', item => `
+      <td>${item._id}</td><td>${item.total}</td>
+    `);
+
+    fetchAndFill('agendamentos-dia-2', 'agendamentos-por-dia', item => `
+      <td>${item._id}</td><td>${item.total}</td>
+    `);
+
+    fetchAndFill('faturamento-vet', 'faturamento-por-veterinario', item => `
+      <td>${item._id}</td><td>R$ ${item.totalFaturado}</td>
+    `);
+
+    fetchAndFill('pets-mais-atendimentos', 'pets-mais-atendimentos', item => `
+      <td>${item._id}</td><td>${item.totalAtendimentos}</td>
+    `);
+
+    fetchAndFill('media-idade-especie', 'media-idade-por-especie', item => `
+      <td>${item._id}</td><td>${item.mediaIdade.toFixed(1)}</td>
     `);
   </script>
 </body>
