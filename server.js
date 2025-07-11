@@ -7,19 +7,17 @@ app.use(cors());
 app.use(express.json());
 
 const uri = 'mongodb://localhost:27017';
-; 
 const client = new MongoClient(uri);
 
 let db;
 
 async function connectDB() {
   await client.connect();
-  db = client.db('petcare');  
+  db = client.db('petcare');
   console.log('Conectado ao MongoDB');
 }
 
 connectDB().catch(console.error);
-
 
 // 1. Pets por espécie
 app.get('/relatorio/pets-por-especie', async (req, res) => {
@@ -33,11 +31,25 @@ app.get('/relatorio/pets-por-especie', async (req, res) => {
   }
 });
 
-// 2. Agendamentos por veterinário
+// 2. Agendamentos por veterinário (com nome)
 app.get('/relatorio/agendamentos-por-veterinario', async (req, res) => {
   try {
     const data = await db.collection('agendamentos').aggregate([
-      { $group: { _id: "$id_veterinario", total: { $sum: 1 } } }
+      {
+        $lookup: {
+          from: "veterinarios",
+          localField: "id_veterinario",
+          foreignField: "_id",
+          as: "veterinario"
+        }
+      },
+      { $unwind: "$veterinario" },
+      {
+        $group: {
+          _id: "$veterinario.nome",
+          total: { $sum: 1 }
+        }
+      }
     ]).toArray();
     res.json(data);
   } catch (error) {
@@ -57,11 +69,25 @@ app.get('/relatorio/atendimentos-por-dia', async (req, res) => {
   }
 });
 
-// 4. Veterinário com maior número de atendimentos
+// 4. Veterinário com mais atendimentos (com nome)
 app.get('/relatorio/veterinario-mais-atendimentos', async (req, res) => {
   try {
     const data = await db.collection('atendimentos').aggregate([
-      { $group: { _id: "$id_veterinario", total: { $sum: 1 } } },
+      {
+        $lookup: {
+          from: "veterinarios",
+          localField: "id_veterinario",
+          foreignField: "_id",
+          as: "veterinario"
+        }
+      },
+      { $unwind: "$veterinario" },
+      {
+        $group: {
+          _id: "$veterinario.nome",
+          total: { $sum: 1 }
+        }
+      },
       { $sort: { total: -1 } },
       { $limit: 1 }
     ]).toArray();
@@ -71,11 +97,25 @@ app.get('/relatorio/veterinario-mais-atendimentos', async (req, res) => {
   }
 });
 
-// 5. Clientes com mais pets
+// 5. Clientes com mais pets (com nome)
 app.get('/relatorio/clientes-mais-pets', async (req, res) => {
   try {
     const data = await db.collection('pets').aggregate([
-      { $group: { _id: "$id_cliente", totalPets: { $sum: 1 } } },
+      {
+        $lookup: {
+          from: "clientes",
+          localField: "id_cliente",
+          foreignField: "_id",
+          as: "cliente"
+        }
+      },
+      { $unwind: "$cliente" },
+      {
+        $group: {
+          _id: "$cliente.nome",
+          totalPets: { $sum: 1 }
+        }
+      },
       { $sort: { totalPets: -1 } }
     ]).toArray();
     res.json(data);
@@ -90,7 +130,7 @@ app.get('/relatorio/atendimentos-por-mes', async (req, res) => {
     const data = await db.collection('atendimentos').aggregate([
       {
         $group: {
-          _id: { $substr: ["$data", 0, 7] }, // exemplo: "2025-07"
+          _id: { $substr: ["$data", 0, 7] }, // "YYYY-MM"
           total: { $sum: 1 }
         }
       },
@@ -115,11 +155,25 @@ app.get('/relatorio/agendamentos-por-dia', async (req, res) => {
   }
 });
 
-// 8. faturamento por veterinario
+// 8. Faturamento por veterinário (com nome)
 app.get('/relatorio/faturamento-por-veterinario', async (req, res) => {
   try {
     const data = await db.collection('atendimentos').aggregate([
-      { $group: { _id: "$id_veterinario", totalFaturado: { $sum: 100 } } },
+      {
+        $lookup: {
+          from: "veterinarios",
+          localField: "id_veterinario",
+          foreignField: "_id",
+          as: "veterinario"
+        }
+      },
+      { $unwind: "$veterinario" },
+      {
+        $group: {
+          _id: "$veterinario.nome",
+          totalFaturado: { $sum: 100 }
+        }
+      },
       { $sort: { totalFaturado: -1 } }
     ]).toArray();
     res.json(data);
@@ -128,11 +182,28 @@ app.get('/relatorio/faturamento-por-veterinario', async (req, res) => {
   }
 });
 
-// 9. Pet com mais atendimentos
+// 9. Pets com mais atendimentos (mostrar espécie e raça)
 app.get('/relatorio/pets-mais-atendimentos', async (req, res) => {
   try {
     const data = await db.collection('atendimentos').aggregate([
-      { $group: { _id: "$id_pet", totalAtendimentos: { $sum: 1 } } },
+      {
+        $lookup: {
+          from: "pets",
+          localField: "id_pet",
+          foreignField: "_id",
+          as: "pet"
+        }
+      },
+      { $unwind: "$pet" },
+      {
+        $group: {
+          _id: {
+            especie: "$pet.especie",
+            raca: "$pet.raca"
+          },
+          totalAtendimentos: { $sum: 1 }
+        }
+      },
       { $sort: { totalAtendimentos: -1 } }
     ]).toArray();
     res.json(data);
@@ -159,8 +230,7 @@ app.get('/relatorio/media-idade-por-especie', async (req, res) => {
   }
 });
 
-
-
+// Iniciar servidor
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);

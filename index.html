@@ -49,7 +49,7 @@
   <section id="agendamentos-vet">
     <h2>2. Agendamentos por veterinário</h2>
     <table>
-      <thead><tr><th>ID Veterinário</th><th>Total Agendamentos</th></tr></thead>
+      <thead><tr><th>Veterinário</th><th>Total Agendamentos</th></tr></thead>
       <tbody></tbody>
     </table>
   </section>
@@ -65,7 +65,7 @@
   <section id="vet-mais-atendimentos">
     <h2>4. Veterinário com maior número de atendimentos</h2>
     <table>
-      <thead><tr><th>ID Veterinário</th><th>Total Atendimentos</th></tr></thead>
+      <thead><tr><th>Veterinário</th><th>Total Atendimentos</th></tr></thead>
       <tbody></tbody>
     </table>
   </section>
@@ -73,7 +73,7 @@
   <section id="clientes-mais-pets">
     <h2>5. Clientes com mais pets</h2>
     <table>
-      <thead><tr><th>ID Cliente</th><th>Total Pets</th></tr></thead>
+      <thead><tr><th>Cliente</th><th>Total Pets</th></tr></thead>
       <tbody></tbody>
     </table>
   </section>
@@ -97,7 +97,7 @@
   <section id="faturamento-vet">
     <h2>8. Faturamento por veterinário</h2>
     <table>
-      <thead><tr><th>ID Veterinário</th><th>Total (R$)</th></tr></thead>
+      <thead><tr><th>Veterinário</th><th>Total (R$)</th></tr></thead>
       <tbody></tbody>
     </table>
   </section>
@@ -105,7 +105,7 @@
   <section id="pets-mais-atendimentos">
     <h2>9. Pets com mais atendimentos</h2>
     <table>
-      <thead><tr><th>ID Pet</th><th>Total Atendimentos</th></tr></thead>
+      <thead><tr><th>Raça (Espécie)</th><th>Total Atendimentos</th></tr></thead>
       <tbody></tbody>
     </table>
   </section>
@@ -137,7 +137,7 @@
       }
     }
 
-    // Chamadas de preenchimento das 10 tabelas
+    // Tabelas
     fetchAndFill('pets-especie', 'pets-por-especie', item => `
       <td>${item._id}</td><td>${item.total}</td>
     `);
@@ -171,7 +171,7 @@
     `);
 
     fetchAndFill('pets-mais-atendimentos', 'pets-mais-atendimentos', item => `
-      <td>${item._id}</td><td>${item.totalAtendimentos}</td>
+      <td>${item._id.raca} (${item._id.especie})</td><td>${item.totalAtendimentos}</td>
     `);
 
     fetchAndFill('media-idade-especie', 'media-idade-por-especie', item => `
