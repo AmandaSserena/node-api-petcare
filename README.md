@@ -121,9 +121,10 @@ Abaixo estão as **rotas REST** que retornam dados analíticos usando **MongoDB 
 
 ## 📄 Licença
 
-Projeto acadêmico desenvolvido por [Amanda Serena](https://github.com/AmandaSserena) [Alfredo Mello](https://github.com/AmandaSserena) 💜
+Projeto acadêmico desenvolvido por [Amanda Serena](https://github.com/AmandaSserena) e [Alfredo Mello](https://github.com/AlfredoMelloDev) 💜
 Uso livre para fins educacionais e aprendizado.
 
 ---
+
 
 
