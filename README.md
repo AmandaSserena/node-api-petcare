@@ -4,6 +4,8 @@ API desenvolvida em **Node.js** com **MongoDB** para gerenciar e analisar dados 
 
 Este projeto foi desenvolvido como **atividade avaliativa final** da disciplina de **Banco de Dados**, com foco em modelagem **NoSQL**, uso de **MongoDB Aggregation** e construção de **relatórios via API REST**.
 
+![Print da aplicação](https://github.com/AmandaSserena/PetCare/raw/main/Print.png)
+
 ---
 
 ## 🚀 Tecnologias Utilizadas
@@ -125,6 +127,7 @@ Projeto acadêmico desenvolvido por [Amanda Serena](https://github.com/AmandaSse
 Uso livre para fins educacionais e aprendizado.
 
 ---
+
 
 
 
