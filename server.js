@@ -230,6 +230,13 @@ app.get('/relatorio/media-idade-por-especie', async (req, res) => {
   }
 });
 
+const path = require('path');
+
+// Servir o index.html quando acessar /
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // Iniciar servidor
 const PORT = 3000;
 app.listen(PORT, () => {
